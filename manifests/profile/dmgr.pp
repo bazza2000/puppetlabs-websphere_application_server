@@ -10,6 +10,7 @@ define websphere_application_server::profile::dmgr (
   $dmgr_host               = $::fqdn,
   $template_path           = undef,
   $options                 = undef,
+  $starting_port           = undef,
   $manage_service          = true,
   $manage_sdk              = false,
   $sdk_name                = undef,
@@ -43,7 +44,11 @@ define websphere_application_server::profile::dmgr (
   }
 
   if ! $options {
-    $_options = "-create -profileName ${profile_name} -profilePath ${_profile_base}/${profile_name} -templatePath ${_template_path} -nodeName ${node_name} -hostName ${dmgr_host} -cellName ${cell}"
+    if ! $starting_port {
+      $_options = "-create -profileName ${profile_name} -profilePath ${_profile_base}/${profile_name} -templatePath ${_template_path} -nodeName ${node_name} -hostName ${dmgr_host} -cellName ${cell}"
+    } else {
+      $_options = "-create -profileName ${profile_name} -profilePath ${_profile_base}/${profile_name} -templatePath ${_template_path} -nodeName ${node_name} -hostName ${dmgr_host} -cellName ${cell} -startingPort ${starting_port}"
+    }
   } else {
     $_options = $options
   }
